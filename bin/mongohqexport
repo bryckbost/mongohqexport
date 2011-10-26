@@ -5,5 +5,17 @@ function usage {
   exit 1
 }
 
-[[ $# -eq 0 ]] && usage
+# mongodb://user:password@stack.mongohq.com:port/database
+function parse_url {
+  user=
+  password=
+  host=
+  port=
+  database=
+  mongoexport=
+}
 
+[[ $# -eq 0 ]] && usage
+[[ $1 != "" ]] && parse_url $1
+
+echo $mongoexport
