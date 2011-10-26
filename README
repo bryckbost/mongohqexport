@@ -1,5 +1,6 @@
-Use your MONGOHQ_URL for exporting from mongoexport.
+Use a MONGOHQ_URL for exporting from mongoexport.
 
 For example:
 
 $  mongohqexport mongodb://user:password@stack.mongohq.com:port/database -c collection_name
+
