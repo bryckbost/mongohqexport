@@ -1,2 +1,9 @@
 #!/usr/bin/env bash
 
+function usage {
+  echo "Usage: mongohqexport [mongohq_url] [-c collection_name ] [-h]"
+  exit 1
+}
+
+[[ $# -eq 0 ]] && usage
+
