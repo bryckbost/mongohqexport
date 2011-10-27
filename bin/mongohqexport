@@ -7,15 +7,17 @@ function usage {
 
 # mongodb://user:password@stack.mongohq.com:port/database
 function parse_url {
-  user=
-  password=
-  host=
-  port=
-  database=
-  mongoexport=
+  # strip the mongodb://
+  stripped_url=$(echo $1 | sed 's/mongodb:\/\///')
+  # now we have user:password@stack.mongohq.com:port/database
+  mongouser=$(echo $stripped_url | awk '{print substr($0, match($0, /[^:]+/), RLENGTH)}')
+  mongopassword=$(echo $stripped_url | awk '{print substr($0, match($0, /:[^@]+/)+1, RLENGTH-1)}')
+  mongohost=$(echo $stripped_url | awk '{print substr($0, match($0, /@[^.].+:/)+1, RLENGTH-2)}')
+  mongoport=$(echo $stripped_url | awk '{print substr($0, match($0, /[0-9]+\//), RLENGTH-1)}')
+  mongodatabase=$(echo $stripped_url | awk '{print substr($0, match($0, /\/.+/)+1, RLENGTH)}')
 }
 
 [[ $# -eq 0 ]] && usage
 [[ $1 != "" ]] && parse_url $1
 
-echo $mongoexport
+echo "mongoexport -h $mongohost:$mongoport -d $mongodatabase -u $mongouser -p $mongopassword"
