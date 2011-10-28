@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function usage {
-  echo "Usage: mongohqexport [mongohq_url] [-c collection_name ] [-h]"
+  echo "Usage: mongohqexport [mongohq_url] [-c collection_name ] [-o output_file] | [-h]"
   exit 1
 }
 
@@ -20,4 +20,34 @@ function parse_url {
 [[ $# -eq 0 ]] && usage
 [[ $1 != "" ]] && parse_url $1
 
-echo "mongoexport -h $mongohost:$mongoport -d $mongodatabase -u $mongouser -p $mongopassword"
+# set the collection
+case $2 in
+  -c | --collection )
+    shift
+    mongocollection=$2
+    ;;
+  -h | --help )
+    usage
+    exit
+    ;;
+  * )
+    usage
+    exit 1
+esac
+
+# set the output file
+case $3 in
+  -o | --out )
+    shift
+    mongoout=$3
+    ;;
+  -h | --help )
+    usage
+    exit
+    ;;
+  * )
+    usage
+    exit 1
+esac
+
+`mongoexport -h $mongohost:$mongoport -d $mongodatabase -u $mongouser -p $mongopassword -c $mongocollection -o $mongoout`
